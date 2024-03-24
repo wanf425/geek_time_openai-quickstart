@@ -22,20 +22,20 @@ class PDFTranslator:
                 LOG.debug(prompt)
 
                 # 调试用，不调用API
-                # translation = content.original
-                # status = True
-                # if content.content_type == ContentType.TEXT:
-                #     translation = PDFTranslator.TEXT_TRASACTION_RESULT
-                # elif content.content_type == ContentType.TABLE:
-                #     translation = PDFTranslator.TABLE_TRASACTION_RESULT
+                translation = content.original
+                status = True
+                if content.content_type == ContentType.TEXT:
+                    translation = PDFTranslator.TEXT_TRASACTION_RESULT
+                elif content.content_type == ContentType.TABLE:
+                    translation = PDFTranslator.TABLE_TRASACTION_RESULT
 
-                translation, status = self.model.make_request(prompt)
+                # translation, status = self.model.make_request(prompt)
                 LOG.info(translation)
                 
                 # Update the content in self.book.pages directly
                 self.book.pages[page_idx].contents[content_idx].set_translation(translation, status)
 
-        self.writer.save_translated_book(self.book, output_file_path, file_format)
+        return self.writer.save_translated_book(self.book, output_file_path, file_format)
 
     TABLE_TRASACTION_RESULT = "[水果, 颜色, 价格（美元）]\n" + \
                     "[苹果, 红色, 1.20]\n" + \

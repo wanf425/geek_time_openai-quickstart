@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Translator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        input[type="file"] {
+            margin-bottom: 15px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        select {
+            margin-bottom: 15px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #777;
+            font-size: 14px;
+        }
+        /* 弹框样式 */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            width: 300px;
+            text-align: center;
+        }
+
+        /* 按钮样式 */
+        .close {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* 背景遮罩层样式 */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <h1>PDF Translator</h1>
+    <form method="POST" action="/translate" enctype="multipart/form-data">
+        <div>
+            <label for="file">Select PDF File:</label>
+            <input type="file" id="file" name="file" accept=".pdf" required>
+        </div>
+        <div>
+            <label for="source_lang">Source Language:</label>
+            <select id="source_lang" name="source_lang" required>
+                <option value="English">English</option>
+                <option value="中文">中文</option>
+                <option value="日本語">日本語</option>
+            </select>
+        </div>
+        <div>
+            <label for="target_format">Target Format:</label>
+            <select id="target_format" name="target_format" required>
+                <option value="PDF">PDF</option>
+                <option value="markdown">Markdown</option>
+            </select>
+        </div>
+        <div>
+            <label for="target_lang">Target Language:</label>
+            <select id="target_lang" name="target_lang" required>
+                <option value="English">English</option>
+                <option value="中文">中文</option>
+                <option value="日本語">日本語</option>
+            </select>
+        </div>
+        <button type="submit">Translate</button>
+    </form>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <!-- 循环显示消息 -->
+            {% for message in messages %}
+                <!-- 创建弹窗div -->
+                <div class="overlay" id="overlay"></div>
+                <div class="popup" id="flashMessage">
+                    <span class="close" onclick="closePopup()">&times;</span>
+                    <p>{{ message }}</p>
+                </div>
+                <!-- 使用JavaScript显示弹窗 -->
+                <script>
+                    // 在页面加载完后显示弹窗
+                    document.addEventListener('DOMContentLoaded', function() {
+                        document.getElementById('overlay').style.display = 'block';
+                        document.getElementById('flashMessage').style.display = 'block';
+                    });
+
+                    // 关闭弹窗的函数
+                    function closePopup() {
+                        document.getElementById('overlay').style.display = 'none';
+                        document.getElementById('flashMessage').style.display = 'none';
+                    }
+                </script>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="footer">
+        <p>Powered by OpenAI</p>
+        <p>Developed by Tolson.Wang</p>
+    </div>
+</body>
+</html>
